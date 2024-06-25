@@ -1,0 +1,54 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model juegos {
+  idJuego Int @id @default(autoincrement())
+  nombre String @db.VarChar(50)
+  descripcion String @db.VarChar(80)
+  precio Decimal @db.Decimal(10,2)
+  alquiler alquiler[]
+  }
+
+model alquiler{
+  idAlquiler Int @id @default(autoincrement())
+  fecha_alguiler DateTime 
+  fecha_devolucion DateTime
+  cantidad Int 
+  estado lista_estado @default(Activo)
+  id_juego Int
+  juego juegos @relation( fields: [id_juego], references: [idJuego])
+  id_usuario Int
+  usuario usuarios @relation( fields: [id_usuario], references: [idUsuario])
+}
+
+enum lista_estado{
+  Activo
+  Inactivo
+}
+
+model usuarios{
+  idUsuario Int @id @default(autoincrement())
+  nombres String @db.VarChar(50) 
+  direccion String @db.VarChar(50)
+  telefono String @db.VarChar(50)
+  correo String @db.VarChar(60)
+  rol rol_usuario @default(invitado)
+  password String @db.VarChar(20)
+  alquiler alquiler[]
+}
+enum rol_usuario{
+  invitado
+  administrador
+}
